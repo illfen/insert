@@ -24,6 +24,14 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 
 def combined_loss(pred, target):
+    # Ensure pred and target have same channel shape: convert RGB pred to single-channel mask
+    if pred.dim() == 3 and pred.size(0) == 3:
+        pred = pred.mean(dim=0, keepdim=True)
+    if pred.dim() == 2:
+        pred = pred.unsqueeze(0)
+    if target.dim() == 2:
+        target = target.unsqueeze(0)
+
     bce = nn.BCEWithLogitsLoss()(pred, target)
     pred = torch.sigmoid(pred)
     pred = pred.view(-1)

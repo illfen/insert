@@ -11,24 +11,30 @@ text_local="A glasses aligns with the eyes"
 global_relationship_words="wearing"
 local_relationship_words="aligns with"
 
+
+# python train_3DGS.py --fp16 --workspace ./res_gaussion/colmap_desk --test --sample \
+#   --radius_list 3.0 --fovy 50 --phi_list -45 -30 -15 0 15 30 45 --theta_list 60 75 90 \
+#   --init_ply /mnt/A/jiangzy/datasets/point_cloud.ply
+
+
 # Attachment Region Detection
 # 场景的不同视角视图生成2d框
-python florence-sam/open_voca_detection.py \
-  --text $attachment_region_text \
-  --image_path ./res_gaussion/colmap_desk/sample_views 
+# python florence-sam/open_voca_detection.py \
+#   --text $attachment_region_text \
+#   --image_path ./res_gaussion/colmap_desk/sample_views 
 #物体的包围框
 python dof_learn/ply_to_bbox.py \
   --input_ply_path ./reconstruct_data/sunglasses1/gradio_output_centered.ply \
-  --output_path ./res_gaussion/colmap_doll_glasses
+  --output_path ./res_gaussion/colmap_desk
 #训练得到一个3D变换，使AABB框与真实目标在多视角上的mask对齐
 python dof_learn/florence_box_train.py  \
-    --radius_list 1.3  \
+    --radius_list 3  \
     --fovy 50 \
     --phi_list -30 -15 0 15 30\
     --theta_list 60 75 90\
     --object_name "sunglasses1" \
-    --target_image_path ./res_gaussion/colmap_doll_glasses/sample_views/detection_florence2 \
-    --init_box_path ./res_gaussion/colmap_doll_glasses/initial/aabb_mesh.ply
+    --target_image_path ./res_gaussion/colmap_desk/sample_views/detection_florence2 \
+    --init_box_path ./res_gaussion/colmap_desk/initial/aabb_mesh.ply
 
 
 # #2. init DOF, scale & rotation is initialized by MLLM reasoning, prompts are provided in prompt.json 
