@@ -24,7 +24,7 @@ local_relationship_words="aligns with"
 #   --image_path ./res_gaussion/colmap_desk/sample_views 
 #物体的包围框
 python dof_learn/ply_to_bbox.py \
-  --input_ply_path ./reconstruct_data/sunglasses1/gradio_output_centered.ply \
+  --input_ply_path /mnt/A/jiangzy/datasets/tag_cup.ply \
   --output_path ./res_gaussion/colmap_desk
 #训练得到一个3D变换，使AABB框与真实目标在多视角上的mask对齐
 python dof_learn/florence_box_train.py  \
